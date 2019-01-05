@@ -13,27 +13,31 @@ var controller = {
   placePiece: function (event) {
     model.changePiece(Number(event.target.id[0]), Number(event.target.id[1]));
     view.renderPiece(event.target.id, model.board[Number(event.target.id[0])][Number(event.target.id[1])]);
-    view.renderAnnouncmentLabel(model.currentTurn, model.currentTurn === 'X' ? model.XPlayerName : model.OPlayerName, model.hasWon === false ? 0 : 1);
-    view.renderScoreBoard(model.scoreBoard);
+    view.renderAnnouncementLabel(model.currentTurn, model.currentTurn === 'X' ? model.XPlayerName : model.OPlayerName, model.hasWon === false ? 0 : 1);
+    view.renderScoreBoard(model.scoreBoard, model.OPlayerName, model.XPlayerName);
   },
   changeOName: function (event){
-
+    model.OPlayerName = event.target.value;
+    view.renderAnnouncementLabel(model.currentTurn, model.currentTurn === 'X' ? model.XPlayerName : model.OPlayerName, model.hasWon === false ? 0 : 1);
+    view.renderScoreBoard(model.scoreBoard, model.OPlayerName, model.XPlayerName);
   },
   changeXName: function (event) {
-
+    model.XPlayerName = event.target.value;
+    view.renderAnnouncementLabel(model.currentTurn, model.currentTurn === 'X' ? model.XPlayerName : model.OPlayerName, model.hasWon === false ? 0 : 1);
+    view.renderScoreBoard(model.scoreBoard, model.OPlayerName, model.XPlayerName);
   }
 }
 
 var view = {
-  renderAnnouncmentLabel: function (piece, name, type) {
+  renderAnnouncementLabel: function (piece, name, type) {
     if (type === 0) {
-      document.getElementById('announcement').innerText = `           It is ${piece}'s (${name}) turn`;
+      document.getElementById('announcement').innerText = `           It is ${name}'s turn`;
     } else {
-      document.getElementById('announcement').innerText = `           ${piece} (${name}) has Won!!`;
+      document.getElementById('announcement').innerText = `           ${name} has Won!!`;
     }
   },
-  renderScoreBoard: function (scores) {
-    document.getElementById('scoreboard').innerHTML = `Scoreboard<br />X: ${scores.X}<br /> O: ${scores.O}`
+  renderScoreBoard: function (scores, OPlayerName, XPlayerName) {
+    document.getElementById('scoreboard').innerHTML = `Scoreboard<br />X (${XPlayerName}): ${scores.X}<br /> O (${OPlayerName}): ${scores.O}`
   },
   renderPiece: function (id, piece) {
     if (piece) {
