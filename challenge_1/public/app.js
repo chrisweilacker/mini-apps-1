@@ -10,17 +10,20 @@ var controller = {
     }
     view.emptyBoard();
   },
+
   placePiece: function (event) {
-    model.changePiece(Number(event.target.id[0]), Number(event.target.id[1]));
-    view.renderPiece(event.target.id, model.board[Number(event.target.id[0])][Number(event.target.id[1])]);
+    model.changePiece(Number(event.target.id[1]), Number(event.target.id[2]));
+    view.renderPiece(event.target.id, model.board[Number(event.target.id[1])][Number(event.target.id[2])]);
     view.renderAnnouncementLabel(model.currentTurn, model.currentTurn === 'X' ? model.XPlayerName : model.OPlayerName, model.hasWon === false ? 0 : 1);
     view.renderScoreBoard(model.scoreBoard, model.OPlayerName, model.XPlayerName);
   },
+
   changeOName: function (event){
     model.OPlayerName = event.target.value;
     view.renderAnnouncementLabel(model.currentTurn, model.currentTurn === 'X' ? model.XPlayerName : model.OPlayerName, model.hasWon === false ? 0 : 1);
     view.renderScoreBoard(model.scoreBoard, model.OPlayerName, model.XPlayerName);
   },
+
   changeXName: function (event) {
     model.XPlayerName = event.target.value;
     view.renderAnnouncementLabel(model.currentTurn, model.currentTurn === 'X' ? model.XPlayerName : model.OPlayerName, model.hasWon === false ? 0 : 1);
@@ -36,15 +39,19 @@ var view = {
       document.getElementById('announcement').innerText = `           ${name} has Won!!`;
     }
   },
+
   renderScoreBoard: function (scores, OPlayerName, XPlayerName) {
     document.getElementById('scoreboard').innerHTML = `Scoreboard<br />X (${XPlayerName}): ${scores.X}<br /> O (${OPlayerName}): ${scores.O}`
   },
+
   renderPiece: function (id, piece) {
     if (piece) {
-      document.getElementById(id).innerHTML = '<P id="' + id +'P" style="font-size:80px; text-align:center;">' + piece + '</p>';
+      document.getElementById(id).innerHTML = '<P id="P' + id.substring(1) +'" style="font-size:80px; text-align:center;">' + piece + '</p>';
+      document.getElementById('P' + id.substring(1)).onclick = controller.placePiece;
     }
 
   },
+
   emptyBoard: function () {
     var pieces = document.getElementsByTagName('td');
 
@@ -57,8 +64,13 @@ var view = {
 var model = {
   board: [new Array(3), new Array(3), new Array(3)],
   scoreBoard: {X: 0, O: 0},
+  hasWon: false,
+  winner: null,
+  currentTurn: 'X',
+  XPlayerName: 'X',
+  OPlayerName: 'O',
+
   changePiece: function (row, column) {
-    console.log(row);
     if (this.board[row][column]!==undefined) {
       return;
     }
@@ -73,6 +85,7 @@ var model = {
     }
 
   },
+
   checkBoard: function (row, column) {
     if (this.board[row][0] === this.board[row][1] && this.board[row][0] === this.board[row][2]) {
       this.hasWon = true;
@@ -91,12 +104,9 @@ var model = {
       this.winner = this.currentTurn;
       this.scoreBoard[this.currentTurn] ++;
     }
-  },
-  hasWon: false,
-  winner: null,
-  currentTurn: 'X',
-  XPlayerName: 'X',
-  OPlayerName: 'O'
+  }
+
+
 }
 
 

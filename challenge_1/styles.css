@@ -1,0 +1,68 @@
+.topContainer {
+  max-width:618px;
+  padding:0;
+  margin:0;
+  border: 0;
+}
+
+.thirdContainer {
+  width:31%;
+  max-width:200;
+  display:inline-block;
+  margin:0;
+  padding:0;
+  border: 0;
+  vertical-align: top;
+}
+
+.centered {
+  text-align:center;
+}
+
+h1 {
+  max-width:618px;
+  text-align: center;
+  font-style: bold;
+  font-size: 48px;
+}
+
+td{
+  width: 200px;
+  height: 200px;
+}
+
+#S00 {
+  border-bottom:2px solid black;
+}
+
+#S01 {
+  border-bottom:2px solid black;
+  border-left: 2px solid black;
+}
+
+#S02 {
+  border-bottom:2px solid black;
+  border-left: 2px solid black;
+}
+
+#S11 {
+  border-left: 2px solid black;
+}
+
+#S12 {
+  border-left: 2px solid black;
+}
+
+#S20 {
+  border-top:2px solid black;
+}
+
+#S21 {
+  border-top:2px solid black;
+  border-left: 2px solid black;
+}
+
+#S22 {
+  border-top:2px solid black;
+  border-left: 2px solid black;
+}
