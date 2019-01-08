@@ -10,65 +10,51 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
+var bodyParser = require('body-parser');
 app.listen(3000);
 
 app.use(express.static('client'));
-
-app.get('/post*', function (req, res) {
-  csv = '';
-
-  if (!req.query.JSON && !req.query.JSONFILE) {
-    res.redirect('/');
-  }
-
-  if (req.query.JSON && req.query.JSON.trim !== '') {
-    csv = processJSON(req.query.JSON);
-    if (csv === '') {
-      res.redirect('/');
-    } else {
-      res.send(createPage(csv));
-    }
-
-  }
-
-  if (csv === '' && req.query.JSONFILE && req.query.JSONFILE.trim !== '') {
-    fs.readFile(req.query.JSONFILE, function (err, data) {
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.post('/post*', function (req, res) {
+  var csv = '';
+  csv = processJSON(JSON.parse(req.body.json));
+  if (csv === '') {
+    res.send('<p>No Data Sent/Bad Format</p>');
+  } else {
+    //save csv to file
+    var d = new Date();
+    var path = '/reports/report-'+d.toISOString().replace(/[^0-9]/g, "") +'.csv';
+    fs.writeFile('./client'+path, csv,'utf8', function(err) {
       if (err) {
-        console.log(err);
-        res.redirect('/');
+        res.send(`<p>No Data Sent/Bad Format ${err}</p>`);
       } else {
-        csv = processJSON(data);
-        console.log(csv);
-        if (csv === '') {
-          res.redirect('/');
-        } else {
-          res.send(createPage(csv));
-        }
+        //redirect user back to page
+        res.send(createPage(csv, path));
       }
     });
+
   }
-
-  //save csv to file
-
-  //send file to user
-
-  //redirect user back to page
 
 });
 
-var processJSON = function (JSONString) {
+var processJSON = function (obj) {
   try {
-      //convert JSON to Object
-    var obj = JSON.parse(JSONString);
     var arrayOfObjects = [obj];
-    var headers = [];
+    var headers = ['id', 'parent_id'];
+
     //build headers and the full list of objects
     for (var i = 0; i<arrayOfObjects.length; i++) {
+      arrayOfObjects[i].id = i;
       for (key in arrayOfObjects[i]) {
         if (arrayOfObjects[i].hasOwnProperty(key)) {
           if (key === 'children') {
             if (Array.isArray(arrayOfObjects[i]['children'])) {
-              arrayOfObjects = arrayOfObjects.concat(arrayOfObjects[i]['children']);
+              for (var child = 0; child<arrayOfObjects[i]['children'].length; child++) {
+                var newItem = arrayOfObjects[i]['children'][child];
+                newItem.parent_id = i;
+                arrayOfObjects.splice(i+1+child, 0, newItem);
+              };
             }
           } else {
             if (!headers.includes(key)) {
@@ -78,17 +64,17 @@ var processJSON = function (JSONString) {
         }
       }
     }
-
     var returnCSV = headers.join(',') + '\n';
     //build CSV
     for (var i = 0; i<arrayOfObjects.length; i++) {
       for (var header = 0; header<headers.length; header++) {
-        if (arrayOfObjects[i][headers[header]]) {
+        if (arrayOfObjects[i][headers[header]] !== undefined) {
           returnCSV += arrayOfObjects[i][headers[header]];
         }
         header === headers.length - 1 ? returnCSV += '\n' : returnCSV += ',';
       }
     }
+
     return returnCSV;
 
   } catch (err) {
@@ -97,27 +83,12 @@ var processJSON = function (JSONString) {
   return '';
 }
 
-var createPage = function (csv) {
-  console.log(csv);
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-  <h1>CSV Report Generator</h1>
-  <form action="/post">
-    <textarea name="JSON"></textarea><br/><br/>
-    <input type="File" name="JSONFILE"></input><br/><br/>
-    <input type="submit">
-  </form>
+var createPage = function (csv, fileLink) {
+  return `
+  <br/><br/><a href="${fileLink}">Your Report is Here.</a><br/>
+  <p>You may right click and go to save link as to save your report.</p>
   <br/>
   <p>
   ${csv.replace(/(\r\n|\n|\r)/gm,'<br />')}
-  </p>
-</body>
-</html>`
+  </p>`
 }

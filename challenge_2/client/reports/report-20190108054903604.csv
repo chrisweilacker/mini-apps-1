@@ -1,0 +1,6 @@
+id,parent_id,firstName,lastName,county,city,role,sales
+,,Joshie,Wyattson,SanMateo,SanMateo,Broker,1000000
+1,,BethJr.,Johnson,SanMateo,Pacifica,Manager,2900000
+2,1,Smitty,Won,SanMateo,RedwoodCity,SalesPerson,4800000
+4,1,Allen,Price,SanMateo,Burlingame,SalesPerson,2500000
+4,1,Allen,Price,SanMateo,Burlingame,SalesPerson,2500000

@@ -4,15 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="app.js"></script>
   <title>Document</title>
 </head>
 <body>
   <h1>CSV Report Generator</h1>
-  <form action="/post">
-    <textarea name="JSON"></textarea><br/><br/>
-    <!-- <input type="File" name="JSONFILE"></input><br/><br/> -->
-    <input type="submit">
-  </form>
+  <p>Please select a .json file to convert to a CSV Report</p>
+    <input type="file" id="file" name="file" accept=".json"></input><br/><br/><br/>
+    <input type="button" id ="submit" value="Convert JSON to CSV"></input>
+    <div id="CSV">
+
+    </div>
 </body>
 </html>
 
