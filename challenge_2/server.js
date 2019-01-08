@@ -18,7 +18,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.post('/post*', function (req, res) {
   var csv = '';
-  csv = processJSON(JSON.parse(req.body.json));
+  console.log(req.body.filter);
+  if (req.body.filter && req.body.filter !== '') {
+    csv = processJSON(JSON.parse(req.body.json), req.body.filter);
+  } else {
+    csv = processJSON(JSON.parse(req.body.json));
+  }
+
   if (csv === '') {
     res.send('<p>No Data Sent/Bad Format</p>');
   } else {
@@ -38,7 +44,8 @@ app.post('/post*', function (req, res) {
 
 });
 
-var processJSON = function (obj) {
+//Model
+var processJSON = function (obj, filter) {
   try {
     var arrayOfObjects = [obj];
     var headers = ['id', 'parent_id'];
@@ -57,7 +64,18 @@ var processJSON = function (obj) {
               };
             }
           } else {
-            if (!headers.includes(key)) {
+            if (filter && String(arrayOfObjects[i][key]).includes(filter)) {
+              //remove any children that may have already been added
+              for (var next = i+1; next<arrayOfObjects.length; next++) {
+                if (arrayOfObjects[next].parent_id && arrayOfObjects[next].parent_id === i) {
+                  arrayOfObjects.splice(next,1);
+                  next--;
+                }
+              }
+              arrayOfObjects.splice(i,1);
+              i= i-1;
+              break;
+            } else if (!headers.includes(key)) {
               headers.push(key);
             }
           }
@@ -83,6 +101,7 @@ var processJSON = function (obj) {
   return '';
 }
 
+//View
 var createPage = function (csv, fileLink) {
   return `
   <br/><br/><a href="${fileLink}">Your Report is Here.</a><br/>
