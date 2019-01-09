@@ -1,5 +1,0 @@
-id,parent_id,firstName,lastName,county,city,role,sales
-0,,Joshie,Wyattson,San Mateo,San Mateo,Broker,1000000
-1,0,Beth Jr.,Johnson,San Mateo,Pacifica,Manager,2900000
-,1,Allen,Price,San Mateo,Burlingame,Sales Person,2500000
-3,0,Beth,Johnson,San Francisco,San Francisco,Broker/Sales Person,7500000

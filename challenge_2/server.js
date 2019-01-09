@@ -107,7 +107,9 @@ var createPage = function (csv, fileLink) {
   <br/><br/><a href="${fileLink}">Your Report is Here.</a><br/>
   <p>You may right click and go to save link as to save your report.</p>
   <br/>
-  <p>
-  ${csv.replace(/(\r\n|\n|\r)/gm,'<br />')}
-  </p>`
+  <table>
+  <tr>
+  <td>
+  ${csv.replace(/\n/gm,'</td></tr><tr><td>').replace(/,/g, ',</td><td>')}
+  </table>`
 }

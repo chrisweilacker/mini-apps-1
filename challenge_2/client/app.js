@@ -3,8 +3,13 @@ window.onload=function (){
 };
 
 //View
-var convertData = function () {
+var convertData = function (e) {
+  e.stopPropagation();
+  e.preventDefault();
+
   if ($('#file').prop('files')[0]) {
+
+
     var filter = $('#filter').val();
     var file = $('#file').prop('files')[0];
     var reader = new FileReader();
@@ -23,6 +28,11 @@ var convertData = function () {
         }
       });
     }
+
+    $('#JSONTOCVSFORM').trigger("reset");
+
+
+
   } else {
     alert('Please select a JSON file to Convert to CSV.')
   }
