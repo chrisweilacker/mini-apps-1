@@ -10,19 +10,21 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
-var bodyParser = require('body-parser');
+var multer = require('multer');
+var storage = multer.memoryStorage()
+var upload = multer({ storage: storage })
 app.listen(3000);
 
 app.use(express.static('client'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.post('/post*', function (req, res) {
+
+app.post('/post*', upload.single('JSON'), function (req, res) {
   var csv = '';
-  console.log(req.body.json, req.body.filter);
+  var theJSON = String(req.file.buffer);
+  console.log(req.body.filter);
   if (req.body.filter && req.body.filter !== '') {
-    csv = processJSON(JSON.parse(req.body.json), req.body.filter);
+    csv = processJSON(JSON.parse(theJSON), req.body.filter);
   } else {
-    csv = processJSON(JSON.parse(req.body.json));
+    csv = processJSON(JSON.parse(theJSON));
   }
 
   if (csv === '') {

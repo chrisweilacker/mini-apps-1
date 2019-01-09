@@ -11,24 +11,19 @@ var convertData = function (e) {
 
 
     var filter = $('#filter').val();
+    var formData = new FormData();
     var file = $('#file').prop('files')[0];
-    var reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = function(e) {
-      var data = reader.result.replace(/\n/g,'');
-      console.log(JSON.parse(data));
-      fetch('/post', {
-        method: 'POST',
-        headers:{
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({'json': data, 'filter': filter})
-      }).then(function (response) {
-        response.text().then(function (text){
-          $('#CSV').html(text);
-        })
-
+    formData.append('JSON', file);
+    formData.append('filter', filter);
+    fetch('/post', {
+      method: 'POST',
+      body: formData
+    }).then(function (response) {
+      response.text().then(function (text){
+        $('#CSV').html(text);
       });
+    });
+
       // $.ajax({
       //   url: '/post',
       //   method: 'POST',
@@ -39,7 +34,7 @@ var convertData = function (e) {
       //     $('#CSV').html(CSV);
       //   }
       // });
-    }
+
 
     $('#JSONTOCVSFORM').trigger("reset");
 
