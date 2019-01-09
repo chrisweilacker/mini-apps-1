@@ -17,16 +17,28 @@ var convertData = function (e) {
     reader.onload = function(e) {
       var data = reader.result.replace(/\n/g,'');
       console.log(JSON.parse(data));
-      $.ajax({
-        url: '/post',
+      fetch('/post', {
         method: 'POST',
-        dataType: 'text',
-        data: {'json': data, 'filter': filter},
-        success: function (CSV) {
-          console.log('success: ', CSV);
-          $('#CSV').html(CSV);
-        }
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({'json': data, 'filter': filter})
+      }).then(function (response) {
+        response.text().then(function (text){
+          $('#CSV').html(text);
+        })
+
       });
+      // $.ajax({
+      //   url: '/post',
+      //   method: 'POST',
+      //   dataType: 'text',
+      //   data: {'json': data, 'filter': filter},
+      //   success: function (CSV) {
+      //     console.log('success: ', CSV);
+      //     $('#CSV').html(CSV);
+      //   }
+      // });
     }
 
     $('#JSONTOCVSFORM').trigger("reset");

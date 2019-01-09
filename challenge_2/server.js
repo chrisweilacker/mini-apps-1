@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.post('/post*', function (req, res) {
   var csv = '';
-  console.log(req.body.filter);
+  console.log(req.body.json, req.body.filter);
   if (req.body.filter && req.body.filter !== '') {
     csv = processJSON(JSON.parse(req.body.json), req.body.filter);
   } else {
