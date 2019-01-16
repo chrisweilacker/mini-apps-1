@@ -45,12 +45,34 @@ class App extends React.Component {
   }
 
   validateForm(currentForm) {
-
+    //test for validation return false if not valid
     if (currentForm === 1) {
-      //test for validation return false if not valid
+      //user registration form
+      var emailRegexValidation = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      var $email = $('#email');
+      var $name = $('#name');
+      var $pass = $('#pass');
+      if (!$email.val().match(emailRegexValidation)) {
+        $email.focus();
+        alert("You have entered an invalid email address!");
+        return false;
+      } else if ($name.val().length === 0) {
+        $name.focus();
+        alert("You need to enter your name!");
+        return false;
+      } else if ($pass.val().length < 8) {
+        $pass.focus();
+        alert("You need to enter a password of at least 8 characters!");
+        return false;
+      }
+    } else if (currentForm === 2) {
+      //address form
+    } else if (currentForm === 3) {
+      //credit card form
     }
     return true;
   }
+
 
   postFormData(step, cb) {
     var myApp = this;
